@@ -27,20 +27,6 @@
                         </div>
                     </div>
                     <p>{{$post->description}}</p>
-                    <!-- Update and Delete buttons -->
-                    <div style="display: flex">
-                        <a class="btn btn-success mx-3" href="{{ route('posts.edit', $post->id) }}" role="button">
-                            Update
-                        </a>
-
-                        <form method="post" action="{{ route('posts.destroy', $post->id) }}">
-                            @method('DELETE')
-                            @csrf
-                            <button class="btn btn-danger" onclick="deleteConfirm(event)">
-                                Delete
-                            </button>
-                        </form>
-                    </div>  
                     <hr>
                 </div>
             </div>
@@ -49,24 +35,4 @@
         <p>No Posts found</p>
     @endif
     </div>
-    <!-- Using the sweet alert notification system -->
-    <script>
-        window.deleteConfirm = function(e) {
-            e.preventDefault();
-            var form = e.target.form;
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
-            }
-            })
-        }
-    </script>
 @endsection
