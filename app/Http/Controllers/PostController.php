@@ -9,7 +9,7 @@ class PostController extends Controller
 {
         // Show all posts
         public function index() {
-            $posts = Post::orderby('created_at')->get();
+            $posts = Post::orderBy('created_at', 'desc')->get();
             return view('posts.index', ['posts' => $posts]);
         }
     
@@ -38,47 +38,5 @@ class PostController extends Controller
 
             $post->save();
             return redirect()->route('posts.index')->with('success', 'Post created successfully.');
-        }
-
-        // Edit post
-        public function edit($id) {
-            $post = Post::findOrFail($id);
-            return view('posts.edit', ['post' => $post]);
-        }
-    
-        // Update post
-        public function update(Request $request, post $post) {
-            $request->validate([
-                'title' => 'required',
-                'description' => 'required',
-                'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-            ]);
-    
-            $file_name = $request->hidden_post_image;
-    
-            if($request->image != '') {
-                $file_name = time() . '.' . request()->image->getClientOriginalExtension();
-                request()->image->move(public_path('images'), $file_name);
-            }
-            $post = post::find($request->hidden_id);
-    
-            $post->title = $request->title;
-            $post->description = $request->description;
-            $post->image = $file_name;
-    
-            $post->save();
-            return redirect()->route('posts.index')->with('success', 'Post has been updated successfully.');
-        }
-
-        // Delete post
-        public function destroy($id) {
-            $post = Post::findOrFail($id);
-            $image_path = public_path()."/images/";
-            $image = $image_path.$post->image;
-            if(file_exists($image)){
-                @unlink($image);
-            }
-            $post->delete();
-            return redirect()->route('posts.index')->with('danger', 'Post has been deleted successfully.');
         }
 }
